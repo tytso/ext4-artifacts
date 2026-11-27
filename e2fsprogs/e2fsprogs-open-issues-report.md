@@ -1,22 +1,25 @@
 # e2fsprogs: evaluation of the open GitHub issues
 
-Evaluated against https://github.com/tytso/e2fsprogs/issues on 2026-11-22 and updated on 2026-11-26 after closing the 14 already-fixed issues: **72 open issues** remain (down from 86; plus 45 open pull requests, which were read only where they bear on an issue — PR #304 was opened on 2026-11-24 and has not been assessed). No changes were made to the repository.
+Evaluated against https://github.com/tytso/e2fsprogs/issues on 2026-11-22, updated on 2026-11-26 after closing 14 already-fixed issues, and updated on 2026-11-27 after `maint` (`cf354a9d`) was published to GitHub (and merged through `f3c16ef2` into `master`/`next` at `76b5934a`) and the 2 newly fixed issues (#219, #259) plus 8 superseded pull requests (#141, #142, #270, #274, #283, #287, #289, #301) were closed: **70 open issues** remain (down from 86 originally, 72 after 2026-11-26; plus **37 open pull requests**, down from 45, read only where they bear on an issue or overlap `maint` commits). No changes were made to the e2fsprogs repository.
 
 ## How to read this report
 
-**Two branches were checked for every issue, because they have diverged.** `pu` (HEAD, `2080baa6`, now pushed to `github/pu` but not yet in `master`, `maint` or `origin/pu`) is `origin/maint` (`10884526`) plus 61 commits. `master` == `next` (`8fd79523`) carries 97 commits that `pu` does not have (the fuse2fs rework, `fuse4fs/`, libsupport cache code, a few libext2fs changes). Merge base is `75e95512`. "Fixed on `pu`" therefore does not mean "fixed on `master`", and each entry says which branch a statement covers. Where nothing is said, the code is identical on both.
+**Two published branches were checked, because `maint` and `master` still diverge.**
+- **`maint` (`cf354a9d`, published to `github/maint` and `origin/maint`):** carries **78 commits** beyond the previous `origin/maint` (`10884526`) — all 61 commits that were previously on `pu` (`10884526..2080baa6`) plus **17 new commits** (`2080baa6..cf354a9d`: `libsupport/compat.c` for macOS deprecation warnings and a `badblocks` I/O refactor, `-S` seed option, scalable in-memory simulator `tst_badblocks_sim` with 21 `b_*` regression tests, and bug-fix series).
+- **`master` == `next` (`76b5934a`, published to `github/master` and `github/next`, matching `origin/master` and `origin/next`):** merged `maint` at `f3c16ef2` (`Merge branch 'maint' into next`). It therefore includes all 61 former-`pu` commits and the first 15 of the 17 new `maint` commits, plus the 97 `master`-only commits (the fuse2fs rework, `fuse4fs/`, libsupport cache code, a few libext2fs changes).
+- **Remaining divergence:** merge base between `github/maint` (`cf354a9d`) and `github/master` (`76b5934a`) is now `f3c16ef2`. Only 2 commits on `github/maint` are not yet in `github/master`: `aeb114fb` (`libsupport: fix -Werror build failures in compat_daemon()`) and `cf354a9d` (`badblocks: report out-of-range numeric arguments consistently on 32-bit`). On GitHub, `github/pu` (`66fe42db`) points to an older v1.46.3-era orphan-file branch. Where nothing is said below, `maint` and `master` have identical code.
 
 **Verification levels** used in the entries:
 
 | Tag | Meaning |
 |---|---|
-| **Re-run** | Reproduced by an evaluator and then re-run by me against out-of-tree builds of `pu` and/or `master` |
+| **Re-run** | Reproduced by an evaluator and then re-run by me against out-of-tree builds of `pu` (now `maint`) and/or `master` |
 | **Reproduced** | Reproduced once, by the evaluator for that area; I checked the cited code or commit but did not re-run it |
 | **Read** | Settled by reading the code; nothing was executed |
 | **History** | Settled from git history (the fixing commit's diff was read) |
 | **Unverified** | Could not be checked here; the entry says what would settle it |
 
-Every commit hash below was confirmed with `git`, including which of a release tag, `master`, `origin/maint` and `pu` contain it. "First release" is the earliest `vX.Y.Z` tag containing the commit.
+Every commit hash below was confirmed with `git`, including which of a release tag, `github/master` (`76b5934a`) and `github/maint` (`cf354a9d`) contain it. "First release" is the earliest `vX.Y.Z` tag containing the commit.
 
 **What could not be done here:** nothing that needs root, a mount, a real block device, Windows/macOS/Cygwin/musl/BSD/Android toolchains, or the network beyond the GitHub issue text (so attachments, gists, lore links and off-site patches referenced from issues were not read). fuse2fs was not mounted and e4defrag was not run. The local builds lack libarchive, so tar-input behaviour was exercised with the distribution's mke2fs 1.47.4, whose `create_inode_libarchive.c` is byte-identical to HEAD.
 
@@ -25,31 +28,29 @@ Every commit hash below was confirmed with `git`, including which of a release t
 | | Count | Issues |
 |---|---|---|
 | **High** | 4 | #145, #108, #295, #282 |
-| **Medium** | 16 | #219, #111, #259, #292, #98, #117, #174, #139, #302, #37, #242, #255, #97, #199, #134, #299 |
-| **Low** | 52 | everything else (down from 66 after closing the 14 already-fixed issues) |
+| **Medium** | 14 | #111, #292, #98, #117, #174, #139, #302, #37, #242, #255, #97, #199, #134, #299 |
+| **Low** | 52 | everything else still open |
 
-- **Closed on 2026-11-26 (14 — already fixed in released versions):** #56, #81, #85, #89, #92, #96, #120, #158, #173, #178, #235, #240, #254, #264 (verified closed on GitHub; archived with their fixing commits and follow-ups in the [Closed since initial triage](#closed-since-initial-triage-2026-11-26) section below).
-- **Fixed on `pu`, not yet in `master` or `maint` (1):** #259.
+- **Closed on 2026-11-27 (2 issues, 8 PRs — fixed/superseded on `github/maint` and `github/master`):** issues #219, #259 and PRs #141, #142, #270, #274, #283, #287, #289, #301 (verified closed on GitHub; archived in [Closed since initial triage](#closed-since-initial-triage) below).
+- **Closed on 2026-11-26 (14 issues — already fixed in released versions):** #56, #81, #85, #89, #92, #96, #120, #158, #173, #178, #235, #240, #254, #264 (verified closed on GitHub; archived in [Closed since initial triage](#closed-since-initial-triage) below).
 - **Already supported, only undocumented (1):** #130.
 - **Duplicates still open:** #175 → #111; #33 → #199; #179 and #176 → #217; #16 → #38; #155 → #300.
-- **Open PRs that are correct fixes for an open issue:** #142 (for #219), #303 (for #286), #281 (for #271, with style changes; PR #304 also targets #271, not yet read), #263 (for #255, with changes), #285 (for #282, with changes). PR #301 (for #259) is superseded by the `pu` series.
+- **Open PRs that are correct fixes for a still-open issue:** #303 (for #286), #304 / #281 (for #271 — #304 has cleaner style; both still omit `lib/e2p/getflags.c`), #263 (for #255, with changes), #285 (for #282, with changes).
 
 ### High priority
 
 | # | Problem | Verified | Why High |
 |---|---|---|---|
-| #145 | `e2fsck` reports a valid file with preallocation past EOF and an extent tree of depth ≥ 2 as corrupt; `-y` deletes the file, `-p` fails the check | Re-run, `pu` and `master` | e2fsck destroys data on a consistent file system; boot-time `-p` check fails |
+| #145 | `e2fsck` reports a valid file with preallocation past EOF and an extent tree of depth ≥ 2 as corrupt; `-y` deletes the file, `-p` fails the check | Re-run, `maint` and `master` | e2fsck destroys data on a consistent file system; boot-time `-p` check fails |
 | #108 | When `e2fsck` empties a non-root extent node it then fails with "No 'up' extent" and clears the whole inode | Re-run (same reproducer) | Turns a repairable (or, with #145, non-existent) problem into loss of the whole file |
-| #295 | Inline-data symlink with an external xattr block: `e2fsck -fy` frees the in-use xattr block; `resize2fs -M` then aborts part-way and leaves damage | Re-run, `pu` and `master` | Two tools each damage a consistent file system |
+| #295 | Inline-data symlink with an external xattr block: `e2fsck -fy` frees the in-use xattr block; `resize2fs -M` then aborts part-way and leaves damage | Re-run, `maint` and `master` | Two tools each damage a consistent file system |
 | #282 | Inline-data size taken from the `system.data` xattr is never bounded; consumers assume it fits in a block (heap overflow in `e2fsck` pass 2 and in libext2fs) | Read (not executed) | Memory corruption in e2fsck/libext2fs from a crafted image, on every branch |
 
 ### Medium priority
 
 | # | Problem | Verified | Disposition |
 |---|---|---|---|
-| #219 | `badblocks -w` reports corrupted blocks at the wrong block number (`mke2fs -cc` uses this mode) | Reproduced | Merge PR #142, add a test |
 | #111 | `e2fsck -c` / `mke2fs -c` ignore a failed `badblocks` run; `e2fsck -c` then discards the existing bad-block list | Reproduced | Fix (tracking issue for #175) |
-| #259 | Timestamps after 2038 written wrongly for 256-byte inodes | Reproduced on `master`; fixed on `pu` | Merge the `pu` series into `master`/`maint`, then close |
 | #292 | `resize2fs -P`/`-M` on bigalloc returns roughly the whole device (cluster/block unit mix-up) | Re-run | Fix (3 lines) |
 | #98 | Offline grow by more than the reserved-GDT horizon fails and leaves the file system needing e2fsck | Reproduced | Fix |
 | #117 | Growing past the GDT limit without `meta_bg` is still refused | Reproduced (scaled down); online half unverified | Finish the partial fix |
@@ -64,25 +65,24 @@ Every commit hash below was confirmed with `git`, including which of a release t
 | #134 | `m_assume_storage_prezeroed` fails as root on a non-tmpfs `$TMPDIR` | Read | Fix the test |
 | #299 | `NOTICE` says lib/ext2fs is LGPL; several file headers say otherwise | Read | Maintainer decisions needed |
 
-### Fixed on `pu` or already supported (still open)
+### Already supported or partially fixed (still open)
 
-| # | Commit | First release | In `master` / `origin/maint` / `pu` |
-|---|---|---|---|
-| #130 | `2e8ca9a2` (2004) io-layer URL syntax, `image?offset=N` (works; undocumented) | long-standing | yes / yes / yes |
-| #259 | `69963f8c` libext2fs: fix handling of inode timestamps before 1970 and after 2038, with companions `812d0329`, `841b2d36`, `a53a9723`, `3c1e51b5`, `5b3a5916`, `2aa2abb7` | none | **no / no / yes (`pu` only)** |
+| # | Commit | First release | In `github/master` / `github/maint` | Action |
+|---|---|---|---|---|
+| #130 | `2e8ca9a2` (2004) io-layer URL syntax, `image?offset=N` (works; undocumented) | long-standing | yes / yes | Document, then close as answered |
 
-Partially fixed: #117 (`ad56ccaa`, v1.47.2), #63 (`37c2008f`, v1.46.2, uid/gid half), #198 (`064b8da0`, v1.47.2, leak item), #133 (`386e7db5`, v1.47.3, libarchive only), #91 (functionality exists; documentation missing).
+Partially fixed: #189 (`44850e62`, `bf7996b9`, `bb75f4e9`, `26ff7213`, in `maint` and `master`, `badblocks -i` half; `e2fsck -c -k` half still open), #211 (`ebc3ff15`, in `maint` and `master`, `num_blocks` consistency; `first_block` range percentage still open), #117 (`ad56ccaa`, v1.47.2), #63 (`37c2008f`, v1.46.2, uid/gid half), #198 (`064b8da0`, v1.47.2, leak item), #133 (`386e7db5`, v1.47.3, libarchive only), #91 (functionality exists; documentation missing).
 
 ---
 
-## Per-issue evaluation (72 open issues)
+## Per-issue evaluation (70 open issues)
 
-Each entry gives: priority, verification level, finding, assessment of any proposed fix, and a design sketch. Line numbers refer to `pu` at `2080baa6`. The 14 issues closed on 2026-11-26 have been moved to [Closed since initial triage](#closed-since-initial-triage-2026-11-26).
+Each entry gives: priority, verification level, finding, assessment of any proposed fix, and a design sketch. Original line numbers are from the 2026-11-22 evaluation at `2080baa6` (now in `maint`/`master`) unless updated below for the `2080baa6..cf354a9d` `maint` series. The 16 issues closed on 2026-11-26 and 2026-11-27 have been moved to [Closed since initial triage](#closed-since-initial-triage).
 
 ### A. e2fsck correctness and memory safety
 
 #### #145 — fsck breaks preallocated files — **High**
-- **Status:** valid, not fixed on `pu` or `master`. **Re-run.**
+- **Status:** valid, not fixed on `maint` or `master`. **Re-run.**
 - **Finding:** a file with `i_size` larger than one block, unwritten blocks preallocated past EOF, and an extent tree of depth ≥ 2 is reported as "end of extent exceeds allowed value". Cause: libext2fs synthesizes the length of the last index entry in each node from `i_size` (`lib/ext2fs/extent.c`, `end_blk`), `scan_extent_node()` passes that down as the child's bound, and the past-EOF exemption added by `085757fc` (v1.42.9) only applies to leaf extents carrying the uninit flag. Index entries never carry it.
 - **My re-run:** on a clean image holding 400 one-block unwritten extents (depth 2), changing only `i_size` to 3072 gives five such errors; `e2fsck -fp` stops with UNEXPECTED INCONSISTENCY; `e2fsck -fy` ends by clearing the inode and removing the directory entry. The same layout at depth 1 stays clean. Identical on `master`.
 - **Caveat:** the images were built with `debugfs`/libext2fs, not written by a kernel. The layout is what `fallocate(FALLOC_FL_KEEP_SIZE)` produces, but a loop-mounted kernel test would close that gap. The evaluator's estimate that about 170 GiB of contiguous preallocation is needed on 4k blocks (about 11 GiB on 1k) is a calculation, not a measurement.
@@ -95,7 +95,7 @@ Each entry gives: priority, verification level, finding, assessment of any propo
   - Land together with #108.
 
 #### #108 — e2fsck: Error in deleting parent extent — **High**
-- **Status:** valid, not fixed on `pu` or `master`. **Re-run** (same reproducer as #145, and a second one by the evaluator with initialized extents).
+- **Status:** valid, not fixed on `maint` or `master`. **Re-run** (same reproducer as #145, and a second one by the evaluator with initialized extents).
 - **Finding:** when `scan_extent_node()` deletes every entry in a non-root node, `ext2fs_extent_delete()` also removes the empty node and its parent entry and leaves the handle one level up. The recursive caller then does `EXT2_EXTENT_UP` again, gets `EXT2_ET_EXTENT_NO_UP`, and `check_blocks_extents()` raises `PR_1_EXTENT_ITERATE_FAILURE`, whose fix is to clear the inode. Undamaged leaves are lost with it.
 - **Proposed fix:** none; the report's diagnosis is accurate.
 - **Design:**
@@ -105,7 +105,7 @@ Each entry gives: priority, verification level, finding, assessment of any propo
   - Test: `tests/f_extent_leaf_emptied/` (programmatic image), with a depth-2 variant.
 
 #### #295 — Inline symlink with external xattr causes fsck bitmap errors and resize2fs failure — **High**
-- **Status:** valid, not fixed on `pu` or `master`. **Re-run** on both builds with the reporter's exact exit codes (0 / 4 / 1 / 0 / 1 / 12; the control without `inline_data` is all 0).
+- **Status:** valid, not fixed on `maint` or `master`. **Re-run** on both builds with the reporter's exact exit codes (0 / 4 / 1 / 0 / 1 / 12; the control without `inline_data` is all 0).
 - **Finding:** two independent defects.
   1. `e2fsck/pass1.c` (the `LINUX_S_ISLNK` branch, around line 2019): for a symlink with `EXT4_INLINE_DATA_FL` pass 1 does `FINISH_INODE_LOOP(); continue;` without calling `check_blocks()`. That is the function that accounts for `i_file_acl`, so the xattr block is never marked in use; pass 5 reports it as a bitmap difference and `-y` frees a block that is still referenced.
   2. `lib/ext2fs/valid_blk.c:ext2fs_inode_has_valid_blocks2()`: for a symlink with an EA block it returns 1 when `i_size >= 60` before it reaches the `EXT4_INLINE_DATA_FL` test, so `resize2fs` calls `ext2fs_block_iterate3()` on an inline-data inode and aborts mid-resize.
@@ -119,8 +119,8 @@ Each entry gives: priority, verification level, finding, assessment of any propo
 - **Side effect of defect 1:** a corrupt `i_file_acl` on an inline-data symlink is also never diagnosed by pass 1 today.
 
 #### #282 — Unbounded ext4 inline_data_size causes heap out-of-bounds write in two independent e2fsck paths — **High**
-- **Status:** valid by code reading on `pu`, `master` and `origin/maint`; not fixed. **Read: neither the reporter, the evaluator nor I executed it.** I confirmed the two cited sites myself.
-- **Finding:** `ext2fs_inline_data_size()` returns `EXT4_MIN_INLINE_DATA_SIZE + ea_size` with no upper bound (`lib/ext2fs/inline_data.c:111`), and `ext2fs_inline_data_get()` copies that many bytes into the caller's buffer. The kernel and the libext2fs write path only ever keep `system.data` in the inode body, but the read path accepts whatever the generic xattr reader returns, which with `ea_inode` can be far larger than a block. Consumers assume it fits: `e2fsck/pass2.c:1158` computes `fs->blocksize - inline_data_size` in `size_t`, and `ext2fs_inline_data_convert_dir()` copies into a one-block buffer. None of the inline-data commits on `pu` adds a bound.
+- **Status:** valid by code reading on `maint` and `master`; not fixed. **Read: neither the reporter, the evaluator nor I executed it.** I confirmed the two cited sites myself.
+- **Finding:** `ext2fs_inline_data_size()` returns `EXT4_MIN_INLINE_DATA_SIZE + ea_size` with no upper bound (`lib/ext2fs/inline_data.c:111`), and `ext2fs_inline_data_get()` copies that many bytes into the caller's buffer. The kernel and the libext2fs write path only ever keep `system.data` in the inode body, but the read path accepts whatever the generic xattr reader returns, which with `ea_inode` can be far larger than a block. Consumers assume it fits: `e2fsck/pass2.c:1158` computes `fs->blocksize - inline_data_size` in `size_t`, and `ext2fs_inline_data_convert_dir()` copies into a one-block buffer. None of the inline-data commits on `maint` adds a bound.
 - **Additional sink not in the report:** `lib/ext2fs/fileio.c` copies inline data into the three-block `file->buf` on the ordinary file read/write path, so `debugfs cat`/`dump` and fuse2fs are exposed as well, not only e2fsck.
 - **What is not established:** the exact failure mode, and whether some earlier check rejects such an image first. The evaluator looked in pass 1 (`check_ea_in_inode()`, `get_inline_data_ea_size()`) and in `read_xattrs_from_buffer()` and found none. An ASAN run on a suitable test image, before and after a fix, would settle it.
 - **Proposed fix (PR #285):** correct as far as it goes. Its check in `ext2fs_inline_data_ea_get()` sits at the single choke point and bounds all consumers. Gaps: the bound (one block) is looser than the real invariant (the value must fit in the inode body and must not live in an EA block or EA inode); the `convert_dir` check ignores the 12-byte checksum tail under `metadata_csum`; there is no e2fsck-side detection or repair, so e2fsck would handle the new library error only incidentally; no regression test; tested only by "a fresh image still fscks clean".
@@ -131,12 +131,6 @@ Each entry gives: priority, verification level, finding, assessment of any propo
   - e2fsck pass 2: belt-and-braces `inline_data_size > fs->blocksize` check before the `memset()`.
   - Tests: an `f_` test (a small prebuilt `image.gz` is justified here because the entry has to be written raw) and a `tst_inline_data` case asserting `ext2fs_inline_data_size()` returns an error.
 - **Disposition:** merge PR #285 with those changes.
-
-#### #259 — ext2fs_write_new_inode: large inode extra timestamp not written for inode size 256B — **Medium**
-- **Status:** valid on `master` (**Reproduced** there: with `SOURCE_DATE_EPOCH` in 2040, atime/ctime/mtime clamp to 2038 and crtime decodes as 1903). **Fixed on `pu` only** (pushed to `github/pu`, not yet in `master`, `origin/maint` or any tag) by `69963f8c` plus six companions (table above). I confirmed the HEAD code and the containment.
-- **Proposed fix (PR #301):** same core idea, but weaker than the `pu` series: pre-1970 times in large inodes still decode wrongly, no test, no clamping. According to the `pu` commit messages (not reproduced), taking it alone would make other callers worse after 2038, which is what the companion commits fix.
-- **Priority rationale:** real and user-visible, but only once the clock or `SOURCE_DATE_EPOCH` is past 2038, and a tested fix already exists on `pu`. The remaining work is merging it into `master`/`maint`, not engineering.
-- **Design:** merge `69963f8c` together with its six companions as one series into `master` and `maint`; do not cherry-pick it alone. Then close #259 and close PR #301 as superseded. Release-note item: `ext2fs_inode_xtime_get()`/`_set()` are macros in the public header, so applications pick up the corrected encoding only when rebuilt.
 
 #### #139 — e2fsck fails using scratch_file — **Medium**
 - **Status:** valid, not fixed. Root cause **Reproduced** with a standalone tdb program; the e2fsck crash itself was not re-run (it needs a multi-billion-inode file system).
@@ -150,8 +144,8 @@ Each entry gives: priority, verification level, finding, assessment of any propo
 
 #### #271 — fgetflags assigns uninitialized value to *flags (when ioctl fails) — **Low**
 - **Status:** valid (**Read**), harmless for in-tree callers, which all test the return value first. Same on all branches.
-- **Proposed fix (PR #281):** correct and minimal. Needs kernel-style indentation/bracing, and the identical pattern in `lib/e2p/getflags.c` should be fixed in the same patch. A second PR, **PR #304** (2026-11-24, same description), was opened after the initial evaluation; its diff has not been read.
-- **Design:** `if (r == -1) { ... } else *flags = f;` in both files; no ABI change, no test needed. **Disposition:** merge PR #281 (or PR #304 if cleaner) with those changes, and close the other.
+- **Proposed fix (PR #281, PR #304):** both are correct and minimal for `lib/e2p/fgetflags.c`. PR #304 (diff read) uses cleaner K&R style (`} else\n\t*flags = f;`) than PR #281, though neither fixes the identical pattern in `lib/e2p/getflags.c`.
+- **Design:** `if (r == -1) { ... } else *flags = f;` in both files; no ABI change, no test needed. **Disposition:** merge PR #304 (extending it to `lib/e2p/getflags.c`) and close PR #281.
 
 #### #286 — ext2fs_check_directory_fuzzer.cc calls open() with O_CREAT but no mode — **Low**
 - **Status:** valid (**Read**); `tests/fuzz/ext2fs_check_directory_fuzzer.cc:26`. The two sibling fuzzers pass `0644`.
@@ -190,7 +184,7 @@ Each entry gives: priority, verification level, finding, assessment of any propo
 ### B. resize2fs
 
 #### #292 — Resize fail with bigalloc feature, and tune2fs output problem — **Medium**
-- **Status:** valid, not fixed. **Re-run:** an empty 4 GiB bigalloc file system reports an estimated minimum of 986584 of 1048576 blocks on both `pu` and `master`.
+- **Status:** valid, not fixed. **Re-run:** an empty 4 GiB bigalloc file system reports an estimated minimum of 986584 of 1048576 blocks on both `maint` and `master`.
 - **Finding:** `calculate_minimum_resize_size()` (`resize/resize2fs.c:3112-3125`) subtracts per-group free counts, which are in clusters, as if they were blocks. Regression from `ac94445f` (v1.45.5); the clamp added by `265f8890` (v1.46.5) is in the wrong unit too. The remark that `tune2fs -l` has no "Cluster count" line is not a bug; no such field ever existed.
 - **Priority rationale:** `-P`/`-M` are useless and plain shrink is refused on every bigalloc file system; limited to bigalloc, and `-f` works around it (while also disabling the safety check).
 - **Design:** make `n` a `blk64_t`, clamp against `EXT2_CLUSTERS_PER_GROUP()`, convert with `EXT2FS_C2B()` before use. An evaluator's scratch patch doing this passed the 34 resize-related tests and produced clean, data-preserving `-M` results. Review point: the bigalloc estimate then becomes tight (two free clusters left in one populated test) and fragmented bigalloc was not tested. Test: `tests/r_bigalloc_min_size/`.
@@ -257,16 +251,10 @@ Each entry gives: priority, verification level, finding, assessment of any propo
 
 ### D. badblocks
 
-The badblocks sources are identical on `pu`, `master` and `origin/maint`, so every statement here holds for all three. `e2fsck -c` and `mke2fs -c` put `/sbin` first on `PATH`, so tests of those paths ran the installed `/sbin/badblocks`, not the built one.
-
-#### #219 — badblocks: wrong CORRUPTION_ERROR block numbers — **Medium**
-- **Status:** valid, not fixed. **Reproduced** with fault injection: in `-w` mode a corrupted block is reported as its number plus the size of the read (block 40 is reported as 56 with `-c 16`).
-- **Proposed fix (PR #142):** moves the compare loop in `test_rw()` above `currently_testing += got`. Applies cleanly; a patched build reports the right numbers. It also fixes a second defect: after a short read the blocks that were read are never compared, so corruption is silently missed.
-- **Priority rationale:** the evaluator rated this High because `mke2fs -cc` uses `-w`, so good blocks get marked bad and corrupting ones stay allocatable. I place it at the top of Medium: it needs data corruption without an I/O error, in a mode that is rarely used on modern drives, and `e2fsck -cc` (which uses `-n`) is unaffected. A verified one-hunk fix exists, so it is cheap to take soon either way.
-- **Design:** apply PR #142. In the same series fix the pattern-buffer alignment: with `-t random` or a 3-byte pattern, any I/O error makes neighbouring good blocks show as corrupt (**Reproduced**; not fixed by PR #142 or #141). Test needs fault injection: an `LD_PRELOAD` shim in `tests/progs`, or a test-only hook in badblocks. No test in `tests/` runs badblocks today.
+`github/maint` (`cf354a9d`) now carries a 15-commit `badblocks` series (`f2192d6f`..`ebc3ff15`, plus `cf354a9d`), of which the first 14 commits (through `ebc3ff15`) are also merged into `github/master` (`76b5934a`). The series factors device I/O behind `struct bb_dev_ops` (`f2192d6f`), adds `-S <seed>` reproducible random seeding (`14646a5e`), adds a scalable in-memory device simulator (`tst_badblocks_sim`, `d7827229`) with **21 deterministic `tests/b_*` regression tests** (`6a39edc1` and follow-up commits), and fixes a suite of `badblocks` bugs — including a heap buffer overflow in `test_nd()` after a short read (`42a73b63`), the `#219` write-mode corruption bug (`b2caa055` + `9c99ce5e`), `-i` known-bad skipping and batch recovery (`44850e62`, `bf7996b9`, `bb75f4e9`, `26ff7213`), 32-bit wraparound near `2^32 - 1` (`13889d17`), and consistent `num_blocks` across phases (`ebc3ff15`). Only `cf354a9d` (consistent 32-bit out-of-range error reporting in `parse_uint()`) is `maint`-only so far. `e2fsck/badblocks.c` and `misc/mke2fs.c:test_disk()` were not touched; they still prepend `/sbin` to `PATH`.
 
 #### #111 — Badblocks fails on really large disks, can take e2fsck down as well — **Medium**
-- **Status:** partially valid. The 32-bit block limit is deliberate and has a workaround (`-b 4096`). The "e2fsck hangs" claim was not reproduced; an 8 TB scan is most likely just slow.
+- **Status:** partially valid, still open. The 32-bit block limit (> 2^32 blocks) is deliberate and has a workaround (`-b 4096`). The "e2fsck hangs" claim was not reproduced; an 8 TB scan is most likely just slow. Note: `13889d17` (in `maint` and `master`, test `b_large_offset`) fixed 32-bit block-number wraparound infinite loops *near* `2^32 - 1`, and `cf354a9d` (`maint` only) made `>= 2^32` numeric errors consistent on 32-bit platforms, but the core 32-bit limit and `e2fsck -c`/`mke2fs -c` defects below are unchanged.
 - **Real bug found (Reproduced):** e2fsck and mke2fs ignore badblocks' exit status. When badblocks fails, `e2fsck -c` wipes the existing bad-block list and carries on, and `mke2fs -c` exits 0 having tested nothing.
 - **Design:**
   - Check the `pclose()` status in `read_bad_blocks_file()` and mke2fs `test_disk()`; abort before `ext2fs_update_bb_inode()` on failure. This must be coordinated with PR #236, which changes badblocks' exit code.
@@ -279,22 +267,22 @@ The badblocks sources are identical on `pu`, `master` and `origin/maint`, so eve
 - Duplicate of #111. **Disposition:** close, noting `-b 4096` (or larger above 16 TiB).
 
 #### #189 — badblocks to ignore — **Low**
-- **Status:** partially valid feature request. `e2fsck -c` never passes the known list to badblocks, so known bad blocks are re-tested every time.
-- **Proposed fix:** the reporter's gitlab patch was not readable. PR #141 fixes the badblocks side (`-i` is ignored in `-w` mode and for later `-n` patterns; the request size stays reduced after a skip). **Reproduced** on a patched build; no logic error found. Missing a man page update and a test.
-- **Design:** merge PR #141 with those changes; in `read_bad_blocks_file()` write the kept list to a temp file and pass `-i`. Do not add "skip unreadable metadata" to e2fsck. **Disposition:** keep open, narrowed.
+- **Status:** partially fixed (`badblocks` side done; `e2fsck` side still open). The entire `badblocks -i` bug suite (PR #141) is now **fixed on both `github/maint` and `github/master`** (more thoroughly than PR #141, with 4 regression tests): `44850e62` (restore batch size after known-bad clamp, `b_ro_read_errors`), `bf7996b9` (don't treat block 0 as end-of-list, `b_known_bad_list`), `bb75f4e9` (skip `-i` blocks in `-w` mode, `b_rw_known_bad`), and `26ff7213` (multi-pattern `bb_iter` rewind and `bb_count` preservation in `test_nd()`, `b_nd_multipat`). However, `e2fsck -c` (`e2fsck/badblocks.c`) still never passes the known bad-block list to `badblocks` via `-i`, so known bad blocks are re-tested every time.
+- **Proposed fix:** the reporter's gitlab patch was not readable. PR #141 was closed on 2026-11-27 as superseded by `44850e62` + `bf7996b9` + `bb75f4e9` + `26ff7213`.
+- **Design:** in `e2fsck/badblocks.c:read_bad_blocks_file()`, when keeping the old list (`-k`), write it to a temp file and pass `-i` to `badblocks`. Do not add "skip unreadable metadata" to e2fsck. **Disposition:** keep #189 open, narrowed to the `e2fsck -c -k` half.
 
 #### #211 — badblocks: suggestions — **Low**
-- **Status:** the percentage is objectively wrong when a first block is given (**Reproduced**); the cursor-hiding request is cosmetic.
-- **Design:** compute the percentage over the tested range; make `num_blocks` consistent; decline cursor hiding. **Disposition:** fix the percentage only.
+- **Status:** partially addressed; still open. `ebc3ff15` (in `maint` and `master`, test `b_verbose_status`) made `num_blocks = last_block` consistent across all phases. However, `print_status()` (`misc/badblocks.c:294`) still computes `calc_percent(currently_testing, num_blocks)` ignoring `first_block`, so the percentage is still wrong when a non-zero first block is given (**Read** on `maint`, previously **Reproduced**). The cursor-hiding request is cosmetic.
+- **Design:** compute the percentage over `[first_block, last_block]` and add a `tst_badblocks_sim` test; decline cursor hiding. **Disposition:** fix the range-relative percentage only.
 
 #### #207 — badblocks: test_pattern size discrepancy — **Low**
-- **Status:** the man page is wrong, the code is right. **Design:** correct `misc/badblocks.8.in` (value up to 0xffffffff, at most four bytes) and optionally document the byte layout. **Disposition:** document.
+- **Status:** still open: the man page (`misc/badblocks.8.in:183`) still says `ULONG_MAX-1`, while the code caps at 32 bits (`UINT_MAX`; `cf354a9d` on `maint` also made out-of-range `parse_uint()` error reporting consistent on 32-bit platforms and for values ≥ 2^64). **Design:** correct `misc/badblocks.8.in` (value up to 0xffffffff, at most four bytes) and optionally document the byte layout. **Disposition:** document.
 
 #### #190 — badblocks – text could be improved for write tests — **Low**
-- **Status:** fair wording point. **Design:** print "Writing pattern 0x..:" from `test_rw()` and keep "Testing with pattern" where it is accurate. **Disposition:** fix.
+- **Status:** still open (fair wording point; `misc/badblocks.c:513` still prints `"Testing with pattern 0x"` for `-w`). **Design:** print `"Writing pattern 0x..:"` from `test_rw()` and keep `"Testing with pattern"` where it is accurate (updating `b_verbose_status` / simulator tests). **Disposition:** fix.
 
 #### #113 — FR: badblocks – allow supplying percentages for first_block and last_block — **Low**
-- **Status:** partly covered since v1.41.7 by `83bfa27d` ("Interrupted at block N"). `-w` is not truly resumable from one number because it makes eight passes.
+- **Status:** still open; partly covered since v1.41.7 by `83bfa27d` ("Interrupted at block N"). `-w` is not truly resumable from one number because it makes eight passes.
 - **Design:** show the current block in the status line; accept a trailing `%`; document. **Disposition:** keep open: feature request.
 
 #### #77 — Badblocks not detecting problems on a known to be failing USB memory stick — **Low**
@@ -302,7 +290,7 @@ The badblocks sources are identical on `pu`, `master` and `origin/maint`, so eve
 
 ### E. tune2fs, dumpe2fs, debugfs
 
-For the files these issues touch `pu` and `master` are effectively identical, and every reproducer was run against both builds with the same result.
+For the files these issues touch `maint` and `master` are effectively identical, and every reproducer was run against both builds with the same result.
 
 #### #302 — `tune2fs -E 'mount_opts=opt1,opt2'` is not correctly parsed — **Medium**
 - **Status:** valid, not fixed. **Re-run:** two options give the usage error and exit 1; one option works.
@@ -343,16 +331,16 @@ For the files these issues touch `pu` and `master` are effectively identical, an
 
 ### F. fuse2fs, e4defrag, filefrag, libext2fs API
 
-fuse2fs differs substantially between branches: `pu`/`maint` have the older `misc/fuse2fs.c`; `master` has the reworked one plus `fuse4fs/`. Nothing was mounted, and e4defrag was not run, so this section rests on code reading unless stated.
+fuse2fs differs substantially between branches: `maint` has the older `misc/fuse2fs.c`; `master` has the reworked one plus `fuse4fs/`. Nothing was mounted, and e4defrag was not run, so this section rests on code reading unless stated.
 
 #### #242 — fuse2fs checks permissions incorrectly — **Medium**
-- **Status:** valid, not fixed (**Read**) on `pu` fuse2fs, `master` fuse2fs and `master` fuse4fs. Create runs the mode check against the file it has just created, so `open(O_CREAT|O_WRONLY, 0444)` fails; unlink checks `W_OK` on the victim instead of only on the parent. The earlier permission commits (`de86c43f`, v1.47.3; `bc76e0f7`) do not cover this.
+- **Status:** valid, not fixed (**Read**) on `maint` fuse2fs, `master` fuse2fs and `master` fuse4fs. Create runs the mode check against the file it has just created, so `open(O_CREAT|O_WRONLY, 0444)` fails; unlink checks `W_OK` on the victim instead of only on the parent. The earlier permission commits (`de86c43f`, v1.47.3; `bc76e0f7`) do not cover this.
 - **Priority rationale:** breaks `git clone`, `touch` under a restrictive umask and `rm` of read-only files in the default unprivileged mode; `-o fakeroot` is a workaround; no data loss.
 - **Design:** split `check_inum_access()` so callers can ask for the inode-flag part only; for unlink/rmdir/rename use that on the child and keep `W_OK` (add `X_OK`) on the parent, and add the sticky-bit rule, which exists nowhere today; for create, open the just-made inode without the mode check. Apply to `misc/fuse2fs.c` on both branches and `fuse4fs/fuse4fs.c` on `master`. Test: a FUSE test that skips unless `/dev/fuse` and `fusermount3` work.
 
 #### #97 — RFE: libext2fs: ext2fs_rmdir and ext2fs_rm — **Medium**
 - **Status:** valid request, not implemented; there are four duplicated implementations (five on `master`).
-- **Why Medium:** the copies have already diverged into a real bug. **Re-run:** after `debugfs rm` of a file with an external xattr block, `e2fsck -fn` reports "Block bitmap differences" for that block. The evaluator also saw an unattached EA inode after `rm` with `ea_inode`. Same code on `pu`, `maint` and `master`.
+- **Why Medium:** the copies have already diverged into a real bug. **Re-run:** after `debugfs rm` of a file with an external xattr block, `e2fsck -fn` reports "Block bitmap differences" for that block. The evaluator also saw an unattached EA inode after `rm` with `ea_inode`. Same code on `maint` and `master`.
 - **Design:** new `ext2fs_remove_inode()` taken from the most complete copy (fuse2fs `remove_inode()`: release EA inodes, `ext2fs_free_ext_attr()`, punch, free the inode), with `ext2fs_rm()` and `ext2fs_rmdir()` on top. New symbols only; add to `debian/libext2fs2t64.symbols`. Convert debugfs, fuse2fs, the libarchive path and fuse4fs. Test: `debugfs rm`/`rmdir` on objects with an xattr block and an EA inode, expecting a clean fsck (fails today).
 
 #### #300 — [RFE/Proposal] Improve e4defrag fragmentation-scoring algorithm — **Low**
@@ -375,7 +363,7 @@ fuse2fs differs substantially between branches: `pu`/`maint` have the older `mis
 - The `st_dev` idea was rejected in the thread. PR #132 changes default output and is not mergeable as is. **Design:** an opt-in machine-readable mode. **Disposition:** keep open, narrowed.
 
 #### #93 — RFE: libext2fs: better "how to do this" documentation — **Low**
-- Valid: the texinfo manual has no mention of `ext2fs_open2`, `bmap2`, extents, xattrs, punch or fallocate. **Design:** a short cookbook of 8–10 recipes pointing at in-tree reference code; the `tst_libext2fs` harness on `pu` is a compact source of call sequences. **Disposition:** document.
+- Valid: the texinfo manual has no mention of `ext2fs_open2`, `bmap2`, extents, xattrs, punch or fallocate. **Design:** a short cookbook of 8–10 recipes pointing at in-tree reference code; the `tst_libext2fs` harness (now on both `maint` and `master`) is a compact source of call sequences. **Disposition:** document.
 
 #### #30 — RFE: take a BSD file lock on block devices to avoid races against udev probing — **Low**
 - **Status:** not implemented. The `io_channel_flock()` infrastructure (`44ce8e42`, `e9dad24e`) is on `master` only, is used only for fuse image files, and locks the partition rather than the whole disk, which is what the udev protocol requires. The patch linked from the thread was not readable.
@@ -383,7 +371,7 @@ fuse2fs differs substantially between branches: `pu`/`maint` have the older `mis
 
 ### G. Build and portability
 
-For every file these issues touch, `pu` and `master` are identical. No MinGW, Cygwin, macOS, ppc64le, musl, BSD or Android toolchain was available, so this section is code reading and history.
+For every file these issues touch, `maint` and `master` are identical (`8456fafc` and `aeb114fb` added `libsupport/compat.c` for macOS `sbrk`/`daemon` deprecation warnings and Windows `compat_daemon`, which does not affect the issues below). No MinGW, Cygwin, macOS, ppc64le, musl, BSD or Android toolchain was available, so this section is code reading and history.
 
 #### #217 — Issue when compiling from source on MSYS2 UCRT64, with duplicates #179 and #176 — **Low**
 - **Status:** valid, not fixed. `lib/ss` uses `fork`/`wait`/`sigprocmask`/`SIGCONT` unconditionally and the top-level Makefile always builds it. Only the libraries minus libss, plus mke2fs, are supported on Windows (that is what the CI job builds).
@@ -439,37 +427,39 @@ These came up while checking the issues above. None has its own issue; several d
 
 | Finding | Where | Verified | Suggested priority |
 |---|---|---|---|
-| `debugfs rdump` of a fast symlink overflows a heap buffer (the subject of open PR #298) | `debugfs/dump.c` | Reproduced under ASAN on `pu`; plain `pu` and `master` binaries silently create a wrong link target | High — merge PR #298 (correct, includes a test, applies to both branches) |
+| `debugfs rdump` of a fast symlink overflows a heap buffer (the subject of open PR #298) | `debugfs/dump.c` | Reproduced under ASAN on `maint`; plain `maint` and `master` binaries silently create a wrong link target | High — merge PR #298 (correct, includes a test, applies to both branches) |
 | `e2fsck -c` and `mke2fs -c` `sprintf()` the badblocks command into a 1024-byte stack buffer; a device path over about 1000 bytes crashes both. The same string goes unquoted to the shell through `popen()` | `e2fsck/badblocks.c`, `misc/mke2fs.c:test_disk()` | Crash reproduced by two evaluators on both branches; word-splitting reproduced; one evaluator also reproduced shell interpretation of the name | Medium — reachable only through the invoking user's own argument, but these tools normally run as root. PR #239 covers only the mke2fs buffer |
 | `copy_fs_verity_data()` still takes a 32-bit `ext2_off_t` file offset; for an fs-verity source file ≥ 2 GiB the Merkle-tree offset is truncated, and ≥ 4 GiB it can wrap and overwrite file data with exit 0. The `6359e0ec` commit message's reason for leaving it is mistaken | `misc/create_inode.c:587` | Read (needs an fs-verity source file to run). I confirmed `ext2_off_t` is `__s32` and the signature | Medium — one-line fix |
 | `debugfs rm`/`rmdir` never free the external xattr block or EA inodes | `debugfs/debugfs.c` | Re-run | Medium — see #97 |
-| `debugfs` raw xattr dump over-read (PR #291) and htree dump over-read (PR #290) | `debugfs/xattrs.c`, `debugfs/htree.c` | Reproduced under ASAN on `pu` | Medium — both PRs are right but lack tests; #290 leaves a gap around unvalidated `info_length` (reasoned, not demonstrated) |
-| `badblocks -w`: corruption missed after a short read; false corruption reports with `-t random` or 3-byte patterns after any I/O error | `misc/badblocks.c:test_rw()` | Reproduced | With #219 |
+| `debugfs` raw xattr dump over-read (PR #291) and htree dump over-read (PR #290) | `debugfs/xattrs.c`, `debugfs/htree.c` | Reproduced under ASAN on `maint` | Medium — both PRs are right but lack tests; #290 leaves a gap around unvalidated `info_length` (reasoned, not demonstrated) |
 | `e2fsck -fn` exits 0 on a file system larger than its device | `e2fsck/unix.c` | Reproduced | Low–Medium; needs a decision |
 | `tune2fs` honours only the last `-E`; an over-long `mount_opts` prints an error but exits 0 | `misc/tune2fs.c` | Reproduced | With #302 |
 | `dumpe2fs` rejects `image?offset=N` and its "Unable to resolve" message prints `argv[1]` rather than the device | `misc/dumpe2fs.c:677-680` | Reproduced | Low |
 | `debugfs ea_set -f` silently truncates its input to one block | `debugfs/xattrs.c:302-305` | Observed by one evaluator | Low |
 | Several test scripts use `exit 0` although they are sourced (`m_assume_storage_prezeroed`, `f_detect_junk`, `m_roottar`, `m_rootgnutar`, `m_rootpaxtar`, `u_direct_io`) | `tests/*/script` | Read | Low |
-| `./configure --enable-maintainer-mode && make -C po all` fails with a gettext infrastructure mismatch on `pu` | `po/Makefile.in.in` | Reproduced | Low; normal builds unaffected |
+| `./configure --enable-maintainer-mode && make -C po all` fails with a gettext infrastructure mismatch on `maint` | `po/Makefile.in.in` | Reproduced | Low; normal builds unaffected |
+
+**Resolved on `github/maint` and `github/master` since 2026-11-26:**
+- `badblocks -w` (`misc/badblocks.c:test_rw()`): corruption missed after a short read — fixed by `b2caa055` (`b_rw_mixed_faults`); false corruption reports with `-t random` or 3-byte patterns after any I/O error — fixed by `9c99ce5e` (`b_rw_random_err`). The same `maint` series also fixed a heap buffer overflow in `test_nd()` after short reads (`42a73b63`), 32-bit block-number wraparound near `2^32 - 1` (`13889d17`), block 0 end-of-list handling (`bf7996b9`), batch-size recovery after known-bad clamping (`44850e62`), and `test_nd()` multi-pattern state (`26ff7213`).
 
 ## Open pull requests read in the course of this work
 
-Only PRs that bear on an issue, or sit in code an issue touches, were assessed.
+37 open pull requests remain on GitHub (down from 45 after closing 8 superseded PRs on 2026-11-27, archived below). Only PRs that bear on an issue or sit in code an issue touches were assessed.
 
 | PR | Subject | Assessment |
 |---|---|---|
+| #304 | fgetflags uninitialized | Merge with `lib/e2p/getflags.c` added (cleaner style than #281; fixes #271) |
 | #303 | fuzzer `open()` mode | Merge (fixes #286) |
-| #301 | large inode timestamp encoding | Close as superseded by the `pu` series (#259) |
 | #298 | rdump fast-symlink overflow | Merge; real heap write overflow, good test |
 | #297 | fuse2fs inherited image locks | Do not merge as is; `master`-only code, needs a design decision |
 | #296 | fuse2fs norecovery read-only | Merge with changes; applies to `master` only, fuse4fs not updated |
 | #291 | debugfs raw xattr bounds | Merge with a test |
 | #290 | debugfs htree count/limit | Merge with changes and a test |
-| #287 | inline symlink buffer in `follow_link` | Already fixed more thoroughly on `pu` by `7a707c07`; `master` is still unpatched |
+| #288 | `ext2fs_xattr_inode_max_size` bounds | Not yet fixed on `maint` or `master` (diff read, not tested) |
 | #285 | bound inline data size | Merge with changes (see #282) |
-| #284 | fuse2fs missing `stdbool.h` | Merge to `master`/`next` only; not applicable to `pu`/`maint` |
-| #281 | fgetflags uninitialized | Merge with style changes, cover `getflags.c` too (#271) |
-| #280 | tolerate unsupported xattrs in `mke2fs -d` | Merge with a small change (`errno` is tested after a free) |
+| #284 | fuse2fs missing `stdbool.h` | Merge to `master`/`next` only; not applicable to `maint` |
+| #281 | fgetflags uninitialized | Close in favour of #304 (or merge with style changes and `getflags.c`; #271) |
+| #280 | tolerate unsupported xattrs in `mke2fs -d` | Merge with a small change (`errno` is still tested after `ext2fs_free_mem()`) |
 | #279 | GCC version check in tdb.c | Merge; the old test is false for any X.0 compiler |
 | #276 | parallel library build ordering | Do not merge as is; not reproduced in 8 clean `-j56` builds, and it makes every no-op `make` re-archive five libraries |
 | #267 | autopoint with gettext 1.0 | Do not merge alone; with the shipped `configure` it installs 0 `.mo` files instead of 24 |
@@ -481,25 +471,49 @@ Only PRs that bear on an issue, or sit in code an issue touches, were assessed.
 | #237, #121 | badblocks speed output | Not mergeable as is; #237 shows wrong speed with a first block and hand-edits 25 `po/` files |
 | #236 | badblocks non-zero exit on errors | Merge with changes, coordinated with the #111 fix |
 | #154 | badblocks status output | Fixes a real `-vv` garbling but only for that mode; needs rework |
-| #142 | badblocks corruption block record | Merge, add a test (#219) |
-| #141 | badblocks skip known bad blocks | Merge with a man page update and a test (#189) |
 | #135 | debugfs `rdump -p` | Does not apply; patches generated `configure` only; resets the process umask; needs a rewrite |
 | #132 | filefrag: no filename for one file | Changes default output; ask for opt-in or close (#88) |
 | #126 | uid/gid of copied inodes with `-d` | Do not merge as is; hunks fail, environment-variable interface, no validation |
 | #123 | libunwind backtraces | Close; dead where `backtrace()` is absent, superseded by #104's fix |
 | #15, #9 | badblocks/e2fsck options from 2017–18 | Stale; do not apply |
 
-**Not assessed:** PRs #304 (opened 2026-11-24, targets #271 alongside PR #281), #294, #289, #283, #275, #274, #270, #268 (diff read only in passing), #243, #167, #161 (noted only for its licensing relevance), #116. By subject line, #289 and #274 (fast-commit replay bounds), #270 (`ext2fs_add_journal_device` overflow) and #283 (cache invalidation after zeroout) look related to commits already on `pu` (`ac352aa7`/`69704f6d`, `725a3bbf`, `cb26ee7b`). I did not compare them, so treat that as a pointer, not a finding.
+**Not assessed:** PRs #294, #275 (touched `badblocks.c` for DIO alignment / xorshift64 / SIGINT error counts + a duplicate CI workflow; conflicts with the new `badblocks` refactor), #268 (diff read only in passing), #243 (`mklost+found.c` `return` vs `exit`), #167, #161 (noted only for its licensing relevance), #116.
 
-## Closed since initial triage (2026-11-26)
+## Closed since initial triage
 
-All 14 issues below were closed on 2026-11-26 (verified against GitHub). Every fixing commit is in `master`, `origin/maint` and `pu`.
+### Closed on 2026-11-27 (2 issues, 8 PRs — fixed/superseded on `github/maint` and `github/master`)
+
+All 2 issues and 8 PRs below were closed on 2026-11-27 (verified against GitHub). Every cited commit is in both `github/master` (`76b5934a`) and `github/maint` (`cf354a9d`) and will ship in the next release after v1.47.4.
+
+#### Issues closed (2)
+
+| # | Title | Fixing commit(s) | Target release | Residual notes / optional follow-ups |
+|---|---|---|---|---|
+| #219 | badblocks: wrong CORRUPTION_ERROR block numbers | `b2caa05541ec` badblocks: fix corruption reporting and short-read check in `test_rw()` (test `b_rw_mixed_faults`); companion `9c99ce5eb3c2` (`b_rw_random_err`) | next release (in `maint` & `master`) | Superseded PR #142 (also closed). |
+| #259 | ext2fs_write_new_inode: large inode extra timestamp not written for inode size 256B | `69963f8cc688` libext2fs: fix handling of inode timestamps before 1970 and after 2038, with companions `2aa2abb77901`, `a53a9723f574`, `841b2d36aad1`, `812d03293b71`, `3c1e51b5d776`, `5b3a591673aa` | next release (in `maint` & `master`) | Superseded PR #301 (also closed). Release-note item: `ext2fs_inode_xtime_get()`/`_set()` are header macros, so external applications pick up the fix upon rebuild. |
+
+#### Pull requests closed as superseded (8)
+
+| PR | Subject | Superseding commit(s) | Residual notes |
+|---|---|---|---|
+| #141 | badblocks: Skip known bad blocks correctly in non-destructive mode and write mode | `44850e62ed8c`, `bf7996b9b78e`, `bb75f4e9d40f`, `26ff7213df91` (4 `b_*` tests) | Covers the `badblocks -i` half of #189; `e2fsck -c -k` passing `-i` remains open in #189. |
+| #142 | badblocks: Fix wrong corruption block record in write mode | `b2caa05541ec` (`b_rw_mixed_faults`), companion `9c99ce5eb3c2` (`b_rw_random_err`) | Closed alongside #219. |
+| #270 | `ext2fs_add_journal_device` buffer overflow | `725a3bbfb943` (`tst_mkjournal`) | Checks `nr_users >= JBD2_USERS_MAX` after duplicate-UUID check and returns `EXT2_ET_TOO_MANY_REFS`. |
+| #274 | e2fsck: validate fast commit dentry tag length | `69704f6d3aee` | Validates dentry tag length, inodes, and names in scan and replay via `fc_validate_dentry_tag()`. |
+| #283 | libext2fs: invalidate cached blocks after a zeroout | `cb26ee7bce87` (`tst_unix_io`) | Covers both `unix_zeroout()` and `unix_discard()`; PR #283's `tests/d_expand_dir_zeroout` could optionally be cherry-picked. |
+| #287 | bound inline symlink buffer in `follow_link` | `7a707c07aa9f` (`tst_dir`) | Validates both slow and inline symlinks. |
+| #289 | e2fsck: bound fast commit replay tags to the journal block | `ac352aa79fd5` (`j_fc_scan_overread`) + fast-commit series through `2080baa6bd3b` (`69704f6d3aee`, `f5b72def6177`, `668a7e66dade`) | Validates tag headers, tag lengths, and per-tag minimum payload sizes in scan and replay. |
+| #301 | libext2fs: fix large inode timestamp encoding | `69963f8cc688` + 6 companions (`2aa2abb77901`..`5b3a591673aa`) | Closed alongside #259. |
+
+### Closed on 2026-11-26 (14 issues — already fixed in released versions)
+
+All 14 issues below were closed on 2026-11-26 (verified against GitHub). Every fixing commit is in `github/master` and `github/maint`.
 
 | # | Title | Fixing commit | First release | Residual notes / optional follow-ups |
 |---|---|---|---|---|
 | #56 | e4defrag crash with inline_data | `fdabe7cb` e4defrag: don't try to defragment files which have 0 or 1 blocks | v1.47.4 | Optional: add defensive guards in `e4defrag.c` (`orig_group_head == NULL`, `block_count == 0`, skip `FIEMAP_EXTENT_DATA_INLINE`) for an unverified inline-data + external-xattr-block corner case. |
 | #81 | m_rootdir_acl test depends on CONFIG_EXT4_FS_POSIX_ACL=y | `13f1ce96` tests: fix ACL-printing tests | v1.46.6 | — |
-| #85 | Can't repair ext4 partition after power outage, e2fsck keeps crashing | `54183fea` e2fsck: skip sorting extents if there are no valid extents | v1.46.5 | On `pu`, `668a7e66` also rewrote the function; both prevent the underflow. |
+| #85 | Can't repair ext4 partition after power outage, e2fsck keeps crashing | `54183fea` e2fsck: skip sorting extents if there are no valid extents | v1.46.5 | `668a7e66` (now in `maint` and `master`) also rewrote the function; both prevent the underflow. |
 | #89 | debugfs: Cannot set the last write time to zero | `b6e29130` libext2fs: add support for the SOURCE_DATE_EPOCH environment variable | v1.47.1 | Optional: two-line fix in `do_set_current_time()` so interactive `set_current_time 0` also works; documenting `SOURCE_DATE_EPOCH` is tracked in #91. |
 | #92 | RFE: mke2fs: allow setting filesystem metadata externally | `7e3a4f0a` mke2fs: the -d option can now handle tarball input | v1.47.1 | Remaining xattr gap for tar input is tracked in #255. |
 | #96 | m_rootdir_acl test faild on 1.46.4 when selinux enabled | `13f1ce96` tests: fix ACL-printing tests | v1.46.6 | See #199 for plausible remaining XFS root fragility (`trusted.SGI_ACL_*`). |
@@ -519,11 +533,11 @@ All 14 issues below were closed on 2026-11-26 (verified against GitHub). Every f
 - **Scratch patches are evidence, not fixes.** For #295, #292, #174 and #98 evaluators tried the sketched change in copies under `/tmp` to check that the diagnosis was right. None was reviewed, and the #174 one in particular is thinly tested.
 - **My initial brief to the evaluators wrongly said `pu` was simply ahead of `master`.** One evaluator caught it; I confirmed the divergence, corrected the brief, and every group then checked both branches. Two evaluators declined to act on my correction because of how it was delivered, but both established the topology independently with `git` and did the two-branch comparison anyway.
 - **Code search:** the `cs` tool does not index this local Git checkout, so `git grep` and `git log -S` were used throughout.
-- **Priorities are my judgement.** Where I departed from an evaluator's rating (#219, High → Medium) the entry says so and why.
+- **Priorities are my judgement.** Where I departed from an evaluator's rating (#219, initially rated High → Medium before it was fixed and closed on 2026-11-27) the original finding records why.
 
 ## Detailed findings
 
-The per-area findings files hold the full evidence from the 2026-11-22 evaluation (including the 14 issues closed on 2026-11-26): commands run, output, file and line citations, and longer design notes.
+The per-area findings files hold the full evidence from the 2026-11-22 evaluation (including the 16 issues closed on 2026-11-26 and 2026-11-27): commands run, output, file and line citations, and longer design notes.
 
 - [A-memsafety.md](file:///usr/local/google/home/tytso/.gemini/jetski/brain/d5b26b05-0fd2-41d7-8c1c-e345b2f7a6dd/scratch/findings/A-memsafety.md) — #282, #295, #259, #271, #286, #228, #227, #188, #198
 - [B-e2fsck.md](file:///usr/local/google/home/tytso/.gemini/jetski/brain/d5b26b05-0fd2-41d7-8c1c-e345b2f7a6dd/scratch/findings/B-e2fsck.md) — #85, #108, #145, #139, #119, #115, #120, #78, #59, #173
